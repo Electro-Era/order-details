@@ -35,16 +35,6 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        .product-details {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .product-details p {
-            margin: 5px 0;
-        }
         button {
             background-color: #4CAF50;
             color: white;
@@ -64,20 +54,20 @@
     <form id="orderForm">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" placeholder="Enter your name" required>
-        
+
         <label for="address">Address:</label>
         <input type="text" id="address" name="address" placeholder="Enter your address" required>
-        
+
         <label for="contact">Contact Number:</label>
         <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
-        
+
         <div class="product-details">
             <p><strong>Product:</strong> Premium Coffee Beans</p>
             <p><strong>Price:</strong> $25</p>
             <p><strong>Delivery Charges:</strong> <span style="color: #ADD8E6;">Free Delivery</span></p>
             <p><strong>Total:</strong> $25</p>
         </div>
-        
+
         <button type="submit">Order Now</button>
     </form>
 
@@ -99,51 +89,41 @@
             const deliveryCharges = 0; // Free Delivery
             const totalPrice = productPrice + deliveryCharges;
 
-            const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
-            const message = `*ORDER DETAILS*\n\n` +
-                            `*NAME:* ${name}\n` +
-                            `*ADDRESS:* ${address}\n` +
-                            `*CONTACT:* ${contact}\n\n` +
-                            `*PRODUCT:* ${productName}\n` +
-                            `*PRICE:* $${productPrice}\n` +
-                            `*DELIVERY:* Free Delivery\n` +
-                            `*TOTAL:* $${totalPrice}`;
+            const orderDetails = `
+                NAME: ${name}
+                ADDRESS: ${address}
+                CONTACT: ${contact}
+                
+                PRODUCT: ${productName}
+                PRICE: $${productPrice}
+                DELIVERY: Free Delivery
+                TOTAL: $${totalPrice}
+            `;
 
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            // Prompt user to choose method
+            const method = prompt("Do you want to place the order via WhatsApp or directly via Gmail? (Type 'WhatsApp' or 'Gmail')");
 
-            // Function to check if WhatsApp is installed (works for mobile devices)
-            const checkWhatsApp = () => {
-                const userAgent = navigator.userAgent.toLowerCase();
-                return /iphone|ipod|android/i.test(userAgent); // Basic check for mobile devices
-            }
-
-            // Try opening WhatsApp first
-            if (checkWhatsApp()) {
-                window.location.href = whatsappUrl; // Open WhatsApp link
-                setTimeout(function() {
-                    // If WhatsApp is not opened (no action), send order via email
-                    if (document.hasFocus()) {
-                        sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice);
-                    }
-                }, 2000); // Wait for 2 seconds before fallback
+            if (method.toLowerCase() === "whatsapp") {
+                const whatsappNumber = "+923218740313"; // Your WhatsApp number
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderDetails)}`;
+                window.location.href = whatsappUrl;
+            } else if (method.toLowerCase() === "gmail") {
+                sendOrderViaGmail(orderDetails);
             } else {
-                // Fallback: Open Gmail if WhatsApp isn't available
-                sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice);
+                alert("Invalid choice. Please type 'WhatsApp' or 'Gmail'.");
             }
         });
 
-        function sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice) {
-            const emailBody = `*ORDER DETAILS*\n\n` +
-                              `*NAME:* ${name}\n` +
-                              `*ADDRESS:* ${address}\n` +
-                              `*CONTACT:* ${contact}\n\n` +
-                              `*PRODUCT:* ${productName}\n` +
-                              `*PRICE:* $${productPrice}\n` +
-                              `*DELIVERY:* Free Delivery\n` +
-                              `*TOTAL:* $${totalPrice}`;
+        function sendOrderViaGmail(orderDetails) {
+            const email = "electroera40@gmail.com"; // Your Gmail address
+            const subject = "New Order Received";
+            const body = encodeURIComponent(orderDetails);
 
-            const mailtoLink = `mailto:electroera40@gmail.com?subject=New Order&body=${encodeURIComponent(emailBody)}`;
-            window.location.href = mailtoLink; // Open Gmail with pre-filled email
+            // Create a mailto link to send the order via Gmail
+            const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+            // Open the mailto link (it will open Gmail or the default mail app on the device)
+            window.location.href = mailtoLink;
         }
     </script>
 </body>
