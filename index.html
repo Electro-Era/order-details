@@ -14,6 +14,37 @@
             background-color: #f9f9f9;
             font-family: Arial, sans-serif;
         }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .product-details {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .product-details p {
+            margin: 5px 0;
+        }
         button {
             background-color: #4CAF50;
             color: white;
@@ -22,7 +53,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-align: center;
+            width: 100%;
         }
         button:hover {
             background-color: #45a049;
@@ -30,35 +61,48 @@
     </style>
 </head>
 <body>
-    <button id="orderNowBtn">Order Now</button>
+    <form id="orderForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" placeholder="Enter your address" required>
+        
+        <label for="contact">Contact Number:</label>
+        <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
+        
+        <div class="product-details">
+            <p><strong>Product:</strong> Acer C740 Windows [4GB-128GB]</p>
+            <p><strong>Price:</strong> Rs.16000</p>
+            <p><strong>Delivery Charges:</strong> <span style="color: deepskyblue;">Free Delivery</span></p>
+            <p><strong>Total:</strong> 16000</p>
+        </div>
+        
+        <button type="submit">Order Now</button>
+    </form>
 
     <script>
-        document.getElementById("orderNowBtn").addEventListener("click", function() {
-            // Gather user details
-            const name = prompt("Enter your name:");
-            if (!name) {
-                alert("Name is required!");
+        document.getElementById("orderForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const name = document.getElementById("name").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const contact = document.getElementById("contact").value.trim();
+
+            if (!name || !address || !contact) {
+                alert("Please fill out all fields.");
                 return;
             }
 
-            const address = prompt("Enter your address:");
-            if (!address) {
-                alert("Address is required!");
-                return;
-            }
+            const productName = "Acer C740 Windows [4GB-128GB]";
+            const productPrice = 16000;
+            const deliveryCharges = 300;
+            const totalPrice = productPrice + deliveryCharges;
 
-            const contact = prompt("Enter your contact number:");
-            if (!contact) {
-                alert("Contact number is required!");
-                return;
-            }
-
-            // Construct WhatsApp message
             const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
-            const message = `Hello, my name is ${name}. My address is ${address}, and my contact number is ${contact}. I am interested in placing an order.`;
+            const message = `Hello, my name is ${name}. My address is ${address}, and my contact number is ${contact}. I would like to order the following:\n\nProduct: ${productName}\nPrice: $${productPrice}\nDelivery Charges: $${deliveryCharges}\nTotal: $${totalPrice}`;
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-            // Open WhatsApp link
             window.location.href = whatsappUrl;
         });
     </script>
