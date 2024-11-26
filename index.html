@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Now</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <button id="orderNowBtn">Order Now</button>
+
+    <script>
+        document.getElementById("orderNowBtn").addEventListener("click", function() {
+            // Gather user details
+            const name = prompt("Enter your name:");
+            if (!name) {
+                alert("Name is required!");
+                return;
+            }
+
+            const address = prompt("Enter your address:");
+            if (!address) {
+                alert("Address is required!");
+                return;
+            }
+
+            const contact = prompt("Enter your contact number:");
+            if (!contact) {
+                alert("Contact number is required!");
+                return;
+            }
+
+            // Construct WhatsApp message
+            const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
+            const message = `Hello, my name is ${name}. My address is ${address}, and my contact number is ${contact}. I am interested in placing an order.`;
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+            // Open WhatsApp link
+            window.location.href = whatsappUrl;
+        });
+    </script>
+</body>
+</html>
