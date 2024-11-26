@@ -44,9 +44,18 @@
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
+        }
+        .order-options {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-options button {
+            width: 48%;
         }
     </style>
 </head>
@@ -68,8 +77,13 @@
             <p><strong>Total:</strong> $25</p>
         </div>
 
-        <button type="submit">Order Now</button>
+        <button type="submit">Submit Order Details</button>
     </form>
+
+    <div class="order-options" id="orderOptions" style="display: none;">
+        <button id="whatsappOrderBtn">Place Order via WhatsApp</button>
+        <button id="gmailOrderBtn">Place Order via Gmail</button>
+    </div>
 
     <script>
         document.getElementById("orderForm").addEventListener("submit", function(event) {
@@ -100,21 +114,27 @@
                 TOTAL: $${totalPrice}
             `;
 
-            // Prompt user to choose method
-            const method = prompt("Do you want to place the order via WhatsApp or directly via Gmail? (Type 'WhatsApp' or 'Gmail')");
+            // Hide the form and show the order options
+            document.getElementById("orderForm").style.display = "none";
+            document.getElementById("orderOptions").style.display = "flex";
 
-            if (method.toLowerCase() === "whatsapp") {
-                const whatsappNumber = "+923218740313"; // Your WhatsApp number
-                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderDetails)}`;
-                window.location.href = whatsappUrl;
-            } else if (method.toLowerCase() === "gmail") {
-                sendOrderViaGmail(orderDetails);
-            } else {
-                alert("Invalid choice. Please type 'WhatsApp' or 'Gmail'.");
-            }
+            // Handle the button clicks
+            document.getElementById("whatsappOrderBtn").onclick = function() {
+                placeOrderViaWhatsApp(orderDetails);
+            };
+
+            document.getElementById("gmailOrderBtn").onclick = function() {
+                placeOrderViaGmail(orderDetails);
+            };
         });
 
-        function sendOrderViaGmail(orderDetails) {
+        function placeOrderViaWhatsApp(orderDetails) {
+            const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderDetails)}`;
+            window.location.href = whatsappUrl;
+        }
+
+        function placeOrderViaGmail(orderDetails) {
             const email = "electroera40@gmail.com"; // Your Gmail address
             const subject = "New Order Received";
             const body = encodeURIComponent(orderDetails);
