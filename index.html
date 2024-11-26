@@ -72,10 +72,10 @@
         <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
         
         <div class="product-details">
-            <p><strong>Product:</strong> Acer C740 Windows [4GB-128GB]</p>
-            <p><strong>Price:</strong> Rs.16000</p>
-            <p><strong>Delivery Charges:</strong> <span style="color: deepskyblue;">Free Delivery</span></p>
-            <p><strong>Total:</strong> 16000</p>
+            <p><strong>Product:</strong> Premium Coffee Beans</p>
+            <p><strong>Price:</strong> $25</p>
+            <p><strong>Delivery Charges:</strong> <span style="color: #ADD8E6;">Free Delivery</span></p>
+            <p><strong>Total:</strong> $25</p>
         </div>
         
         <button type="submit">Order Now</button>
@@ -94,17 +94,57 @@
                 return;
             }
 
-            const productName = "Acer C740 Windows [4GB-128GB]";
-            const productPrice = 16000;
-            const deliveryCharges = 300;
+            const productName = "Premium Coffee Beans";
+            const productPrice = 25;
+            const deliveryCharges = 0; // Free Delivery
             const totalPrice = productPrice + deliveryCharges;
 
             const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
-            const message = `Hello, my name is ${name}. My address is ${address}, and my contact number is ${contact}. I would like to order the following:\n\nProduct: ${productName}\nPrice: $${productPrice}\nDelivery Charges: $${deliveryCharges}\nTotal: $${totalPrice}`;
+            const message = `*ORDER DETAILS*\n\n` +
+                            `*NAME:* ${name}\n` +
+                            `*ADDRESS:* ${address}\n` +
+                            `*CONTACT:* ${contact}\n\n` +
+                            `*PRODUCT:* ${productName}\n` +
+                            `*PRICE:* $${productPrice}\n` +
+                            `*DELIVERY:* Free Delivery\n` +
+                            `*TOTAL:* $${totalPrice}`;
+
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-            window.location.href = whatsappUrl;
+            // Function to check if WhatsApp is installed (works for mobile devices)
+            const checkWhatsApp = () => {
+                const userAgent = navigator.userAgent.toLowerCase();
+                return /iphone|ipod|android/i.test(userAgent); // Basic check for mobile devices
+            }
+
+            // Try opening WhatsApp first
+            if (checkWhatsApp()) {
+                window.location.href = whatsappUrl; // Open WhatsApp link
+                setTimeout(function() {
+                    // If WhatsApp is not opened (no action), send order via email
+                    if (document.hasFocus()) {
+                        sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice);
+                    }
+                }, 2000); // Wait for 2 seconds before fallback
+            } else {
+                // Fallback: Open Gmail if WhatsApp isn't available
+                sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice);
+            }
         });
+
+        function sendEmail(name, address, contact, productName, productPrice, deliveryCharges, totalPrice) {
+            const emailBody = `*ORDER DETAILS*\n\n` +
+                              `*NAME:* ${name}\n` +
+                              `*ADDRESS:* ${address}\n` +
+                              `*CONTACT:* ${contact}\n\n` +
+                              `*PRODUCT:* ${productName}\n` +
+                              `*PRICE:* $${productPrice}\n` +
+                              `*DELIVERY:* Free Delivery\n` +
+                              `*TOTAL:* $${totalPrice}`;
+
+            const mailtoLink = `mailto:electroera40@gmail.com?subject=New Order&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoLink; // Open Gmail with pre-filled email
+        }
     </script>
 </body>
 </html>
