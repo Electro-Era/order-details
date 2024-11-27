@@ -1,139 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Now</title>
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-            font-family: Arial, sans-serif;
-        }
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .order-options {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .order-options button {
-            width: 48%;
-        }
-    </style>
+  <title>Order Form</title>
 </head>
 <body>
-    <form id="orderForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+  <h2>Place Your Order</h2>
+  <form id="orderForm">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" placeholder="Enter your address" required>
+    <label for="address">Address:</label><br>
+    <textarea id="address" name="address" required></textarea><br><br>
 
-        <label for="contact">Contact Number:</label>
-        <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
+    <label for="contact">Contact:</label><br>
+    <input type="text" id="contact" name="contact" required><br><br>
 
-        <div class="product-details">
-            <p><strong>Product:</strong> Premium Coffee Beans</p>
-            <p><strong>Price:</strong> $25</p>
-            <p><strong>Delivery Charges:</strong> <span style="color: #ADD8E6;">Free Delivery</span></p>
-            <p><strong>Total:</strong> $25</p>
-        </div>
+    <label for="product">Product Name:</label><br>
+    <input type="text" id="product" name="product" required><br><br>
 
-        <button type="submit">Submit Order Details</button>
-    </form>
+    <label for="price">Price:</label><br>
+    <input type="number" id="price" name="price" required><br><br>
 
-    <div class="order-options" id="orderOptions" style="display: none;">
-        <button id="whatsappOrderBtn">Place Order via WhatsApp</button>
-        <button id="gmailOrderBtn">Place Order via Gmail</button>
-    </div>
+    <label for="delivery">Delivery Charges:</label><br>
+    <input type="number" id="delivery" name="delivery" required><br><br>
 
-    <script>
-        document.getElementById("orderForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
+    <label for="total">Total:</label><br>
+    <input type="number" id="total" name="total" required><br><br>
 
-            const name = document.getElementById("name").value.trim();
-            const address = document.getElementById("address").value.trim();
-            const contact = document.getElementById("contact").value.trim();
+    <button type="button" onclick="submitOrder()">Submit</button>
+  </form>
 
-            if (!name || !address || !contact) {
-                alert("Please fill out all fields.");
-                return;
-            }
+  <script>
+    function submitOrder() {
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbzElw6npe2daMi6wx6aVhi11AW3FFIVO-RwfxWyok1sKH5QkGVczOsMgGkKhKA0J0R9/exec'; // Your Web App URL
+      const form = document.getElementById('orderForm');
+      const formData = new FormData(form);
 
-            const productName = "Premium Coffee Beans";
-            const productPrice = 25;
-            const deliveryCharges = 0; // Free Delivery
-            const totalPrice = productPrice + deliveryCharges;
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value; // Convert FormData to an object
+      });
 
-            const orderDetails = {
-                name: name,
-                address: address,
-                contact: contact,
-                product: productName,
-                price: productPrice,
-                deliveryCharges: deliveryCharges,
-                totalPrice: totalPrice
-            };
-
-            // Send the order details to Google Sheets via Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbyv7p5Akx9nxMh6mm0NCkfmCTuRxTCAi6Kikqps8jJnJpiMQnfbNTVv-vr7kArH_vKJ/exec', {  // Replace with the URL of your deployed Google Apps Script web app
-                method: 'POST',
-                body: JSON.stringify(orderDetails),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.text())
-            .then(responseText => {
-                alert("Order received successfully!");
-                console.log(responseText);
-                // Hide the form and show the order options
-                document.getElementById("orderForm").style.display = "none";
-                document.getElementById("orderOptions").style.display = "flex";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("There was an issue submitting the order.");
-            });
-        });
-    </script>
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data), // Send data as JSON
+        headers: {
+          'Content-Type': 'application/json', // Ensure the content type is JSON
+        },
+      })
+        .then(response => response.text())
+        .then(text => alert('Order submitted successfully: ' + text))
+        .catch(error => alert('Error submitting order: ' + error));
+    }
+  </script>
 </body>
 </html>
