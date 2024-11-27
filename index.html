@@ -71,10 +71,10 @@
         <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
 
         <div class="product-details">
-            <p><strong>Product:</strong> Acer C740 Windows [4GB-128GB]</p>
-            <p><strong>Price:</strong> Rs.16000</p>
-            <p><strong>Delivery Charges:</strong> <span style="color: deepskyblue;">Free Delivery</span></p>
-            <p><strong>Total:</strong> 16000</p>
+            <p><strong>Product:</strong> Premium Coffee Beans</p>
+            <p><strong>Price:</strong> $25</p>
+            <p><strong>Delivery Charges:</strong> <span style="color: #ADD8E6;">Free Delivery</span></p>
+            <p><strong>Total:</strong> $25</p>
         </div>
 
         <button type="submit">Submit Order Details</button>
@@ -103,48 +103,37 @@
             const deliveryCharges = 0; // Free Delivery
             const totalPrice = productPrice + deliveryCharges;
 
-            const orderDetails = `
-                NAME: ${name}
-                ADDRESS: ${address}
-                CONTACT: ${contact}
-                
-                PRODUCT: ${productName}
-                PRICE: $${productPrice}
-                DELIVERY: Free Delivery
-                TOTAL: $${totalPrice}
-            `;
-
-            // Hide the form and show the order options
-            document.getElementById("orderForm").style.display = "none";
-            document.getElementById("orderOptions").style.display = "flex";
-
-            // Handle the button clicks
-            document.getElementById("whatsappOrderBtn").onclick = function() {
-                placeOrderViaWhatsApp(orderDetails);
+            const orderDetails = {
+                name: name,
+                address: address,
+                contact: contact,
+                product: productName,
+                price: productPrice,
+                deliveryCharges: deliveryCharges,
+                totalPrice: totalPrice
             };
 
-            document.getElementById("gmailOrderBtn").onclick = function() {
-                placeOrderViaGmail(orderDetails);
-            };
+            // Send the order details to Google Sheets via Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbyv7p5Akx9nxMh6mm0NCkfmCTuRxTCAi6Kikqps8jJnJpiMQnfbNTVv-vr7kArH_vKJ/exec', {  // Replace with the URL of your deployed Google Apps Script web app
+                method: 'POST',
+                body: JSON.stringify(orderDetails),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(responseText => {
+                alert("Order received successfully!");
+                console.log(responseText);
+                // Hide the form and show the order options
+                document.getElementById("orderForm").style.display = "none";
+                document.getElementById("orderOptions").style.display = "flex";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("There was an issue submitting the order.");
+            });
         });
-
-        function placeOrderViaWhatsApp(orderDetails) {
-            const whatsappNumber = "+923218740313"; // Replace with your WhatsApp number
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderDetails)}`;
-            window.location.href = whatsappUrl;
-        }
-
-        function placeOrderViaGmail(orderDetails) {
-            const email = "electroera40@gmail.com"; // Your Gmail address
-            const subject = "New Order Received";
-            const body = encodeURIComponent(orderDetails);
-
-            // Create a mailto link to send the order via Gmail
-            const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-
-            // Open the mailto link (it will open Gmail or the default mail app on the device)
-            window.location.href = mailtoLink;
-        }
     </script>
 </body>
 </html>
